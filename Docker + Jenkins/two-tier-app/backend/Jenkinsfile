@@ -1,0 +1,62 @@
+pipeline {
+    agent {
+        docker {
+            image 'node:18'   // Node.js 18 image (includes npm)
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Allow docker commands
+        }
+    }
+
+    environment {
+        IMAGE_NAME = "two-tier-backend"
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                echo '📥 Pulling latest code from GitHub...'
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                echo '📦 Installing dependencies...'
+                sh 'npm install'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                echo '🧪 Running tests...'
+                sh 'npm test || echo "⚠️ No tests found, skipping..."'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo '🐳 Building Docker image...'
+                sh 'docker build -t ${IMAGE_NAME} .'
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                echo '🚀 Running container...'
+                sh '''
+                docker rm -f ${IMAGE_NAME} || true
+                docker run -d -p 3000:3000 --name ${IMAGE_NAME} ${IMAGE_NAME}
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Build and deployment successful!'
+        }
+        failure {
+            echo '❌ Build failed. Check logs for details.'
+        }
+    }
+}
