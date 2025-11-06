@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        FRONTEND_DIR = 'docker-jenkins/two-tier-app/frontend'
-        BACKEND_DIR  = 'docker-jenkins/two-tier-app/backend'
+        FRONTEND_DIR = 'Docker-Jenkins/two-tier-app/frontend'
+        BACKEND_DIR  = 'Docker-Jenkins/two-tier-app/backend'
         FRONTEND_IMAGE = 'two-tier-frontend:latest'
         BACKEND_IMAGE  = 'two-tier-backend:latest'
     }
