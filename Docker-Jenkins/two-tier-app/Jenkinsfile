@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        FRONTEND_DIR = 'Docker + Jenkins/two-tier-app/frontend'
-        BACKEND_DIR = 'Docker + Jenkins/two-tier-app/backend'
+        FRONTEND_DIR = 'docker-jenkins/two-tier-app/frontend'
+        BACKEND_DIR  = 'docker-jenkins/two-tier-app/backend'
         FRONTEND_IMAGE = 'two-tier-frontend:latest'
-        BACKEND_IMAGE = 'two-tier-backend:latest'
+        BACKEND_IMAGE  = 'two-tier-backend:latest'
     }
 
     stages {
@@ -18,12 +18,12 @@ pipeline {
 
         stage('Build Frontend') {
             steps {
-                echo '📦 Building frontend...'
+                echo '💻 Building frontend...'
                 dir("${FRONTEND_DIR}") {
-                    sh '''
-                        docker run --rm -v "$PWD":/app -w /app node:18 bash -c "npm install && npm run build"
+                    sh """
+                        docker run --rm -v "\$PWD":/app -w /app node:18 bash -c "npm install && npm run build"
                         docker build -t ${FRONTEND_IMAGE} .
-                    '''
+                    """
                 }
             }
         }
@@ -32,21 +32,21 @@ pipeline {
             steps {
                 echo '📦 Building backend...'
                 dir("${BACKEND_DIR}") {
-                    sh '''
-                        docker run --rm -v "$PWD":/app -w /app node:18 bash -c "npm install"
+                    sh """
+                        docker run --rm -v "\$PWD":/app -w /app node:18 bash -c "npm install"
                         docker build -t ${BACKEND_IMAGE} .
-                    '''
+                    """
                 }
             }
         }
 
         stage('Run Containers') {
             steps {
-                echo '🚀 Running frontend and backend containers...'
-                sh '''
-                    docker run -d -p 80:3000 --name frontend ${FRONTEND_IMAGE} || echo "Frontend container already running."
-                    docker run -d -p 3000:3000 --name backend ${BACKEND_IMAGE} || echo "Backend container already running."
-                '''
+                echo '🚀 Running backend container...'
+                sh 'docker run -d -p 3000:3000 --name backend ${BACKEND_IMAGE} || echo "Backend container already running."'
+
+                echo '🚀 Running frontend container...'
+                sh 'docker run -d -p 8080:80 --name frontend ${FRONTEND_IMAGE} || echo "Frontend container already running."'
             }
         }
     }
@@ -54,10 +54,8 @@ pipeline {
     post {
         always {
             echo '🧹 Cleaning up old containers...'
-            sh '''
-                docker ps -aq --filter "name=frontend" | xargs -r docker rm -f || true
-                docker ps -aq --filter "name=backend" | xargs -r docker rm -f || true
-            '''
+            sh 'docker ps -aq --filter "name=frontend" | xargs -r docker rm -f || true'
+            sh 'docker ps -aq --filter "name=backend" | xargs -r docker rm -f || true'
         }
     }
 }
