@@ -24,8 +24,10 @@ pipeline {
                     docker build -t ${FRONTEND_IMAGE} . || true
                     if [ \$(docker images -q ${FRONTEND_IMAGE}) ]; then
                         echo '🚀 Starting frontend container...'
+                        
                         docker ps -q --filter name=frontend | grep -q . && docker stop frontend && docker rm frontend || true
-                        docker run -d -p 8080:80 --name frontend ${FRONTEND_IMAGE}
+docker run -d -p 8080:80 --name frontend two-tier-frontend:latest
+
                     else
                         echo '⚠️ No changes in frontend image, skipping container restart.'
                     fi
