@@ -77,15 +77,16 @@ docker compose version
 
 **Step 4.1 — Pull Jenkins image**
 ```
-Step 4.1 — Pull Jenkins image
+sudo docker pull jenkins/jenkins:lts
 ```
 
 **Step 4.2 — Create Jenkins container**
 ```
-docker run -d \
+sudo docker run -d \
   --name jenkins \
   -p 8080:8080 -p 50000:50000 \
   -v jenkins_home:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
   jenkins/jenkins:lts
 ```
 
@@ -102,6 +103,8 @@ docker run -d \
 
 - **-v jenkins_home:/var/jenkins_home →** Persists data even if the container restarts
 
+- **-v /var/run/docker.sock:/var/run/docker.sock →** This allows Jenkins to use the host’s Docker engine.
+
 **Step 4.3 — Get Jenkins initial password**
 ```
 docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
@@ -112,11 +115,35 @@ docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 http://<your-ec2-public-ip>:8080
 ```
 
+## Step 5: Install Docker CLI inside Jenkins container
 
-## Step 5: Update System Packages
+**Step 5.1 — Access Jenkins container shell**
+```
+sudo docker exec -u root -it jenkins bash
+```
+
+**Step 5.2 — Update package index**
+```
+apt update
+```
+
+**Step 5.3 — Install Docker CLI**
+```
+apt install -y docker.io
+```
+*Verify installation*
+```
+docker --version
+```
+
+**Step 5.4 — Access Jenkins from browser**
+```
+http://<your-ec2-public-ip>:8080
+```
+66b6c47ad470453e9279068914425430
 
 
-## Step 6: Update System Packages
+## Step 6: Build the Two-Tier Web App Structure
 
 
 
