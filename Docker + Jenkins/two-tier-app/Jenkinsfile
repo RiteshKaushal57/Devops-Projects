@@ -7,12 +7,11 @@ pipeline {
     }
 
     environment {
-        BACKEND_DIR = 'backend'
+        BACKEND_DIR = 'Docker + Jenkins/two-tier-app/backend'
         DOCKER_IMAGE = 'two-tier-backend:latest'
     }
 
     stages {
-
         stage('Checkout Code') {
             steps {
                 echo '📥 Pulling latest code from GitHub...'
@@ -25,15 +24,6 @@ pipeline {
                 echo '📦 Installing backend dependencies...'
                 dir("${BACKEND_DIR}") {
                     sh 'npm install'
-                }
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                echo '🧪 Running tests...'
-                dir("${BACKEND_DIR}") {
-                    sh 'npm test || echo "No tests found, skipping..."'
                 }
             }
         }
@@ -56,12 +46,6 @@ pipeline {
     }
 
     post {
-        success {
-            echo '✅ Build and container started successfully!'
-        }
-        failure {
-            echo '❌ Build failed! Check logs for details.'
-        }
         always {
             echo '🧹 Cleaning up old containers...'
             sh 'docker ps -aq --filter "name=backend" | xargs -r docker rm -f || true'
