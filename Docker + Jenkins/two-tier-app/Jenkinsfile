@@ -2,8 +2,10 @@ pipeline {
     agent any
 
     environment {
+        FRONTEND_DIR = 'Docker + Jenkins/two-tier-app/frontend'
         BACKEND_DIR = 'Docker + Jenkins/two-tier-app/backend'
-        DOCKER_IMAGE = 'two-tier-backend:latest'
+        FRONTEND_IMAGE = 'two-tier-frontend:latest'
+        BACKEND_IMAGE = 'two-tier-backend:latest'
     }
 
     stages {
@@ -14,36 +16,53 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Install Backend Dependencies') {
             steps {
                 echo '📦 Installing backend dependencies...'
                 dir("${BACKEND_DIR}") {
-                    // Fix npm cache permissions
-                    sh 'npm config set cache $WORKSPACE/.npm --global'
                     sh 'npm install'
                 }
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Install Frontend Dependencies') {
             steps {
-                echo '🐳 Building Docker image for backend...'
-                dir("${BACKEND_DIR}") {
-                    sh 'docker build -t ${DOCKER_IMAGE} .'
+                echo '📦 Installing frontend dependencies...'
+                dir("${FRONTEND_DIR}") {
+                    sh 'npm install'
                 }
             }
         }
 
-        stage('Run Container') {
+        stage('Build Frontend') {
             steps {
-                echo '🚀 Running backend container...'
-                sh '''
-                    if [ "$(docker ps -q -f name=backend)" ]; then
-                        echo "Container already running. Restarting..."
-                        docker rm -f backend
-                    fi
-                    docker run -d -p 3000:3000 --name backend ${DOCKER_IMAGE}
-                '''
+                echo '🏗️ Building frontend...'
+                dir("${FRONTEND_DIR}") {
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                echo '🐳 Building Docker images...'
+                dir("${BACKEND_DIR}") {
+                    sh 'docker build -t ${BACKEND_IMAGE} .'
+                }
+                dir("${FRONTEND_DIR}") {
+                    sh 'docker build -t ${FRONTEND_IMAGE} .'
+                }
+            }
+        }
+
+        stage('Run Containers') {
+            steps {
+                echo '🚀 Running containers...'
+                sh 'docker ps -aq --filter "name=backend" | xargs -r docker rm -f || true'
+                sh 'docker ps -aq --filter "name=frontend" | xargs -r docker rm -f || true'
+
+                sh 'docker run -d -p 3000:3000 --name backend ${BACKEND_IMAGE}'
+                sh 'docker run -d -p 8080:80 --name frontend ${FRONTEND_IMAGE}'
             }
         }
     }
@@ -52,6 +71,7 @@ pipeline {
         always {
             echo '🧹 Cleaning up old containers...'
             sh 'docker ps -aq --filter "name=backend" | xargs -r docker rm -f || true'
+            sh 'docker ps -aq --filter "name=frontend" | xargs -r docker rm -f || true'
         }
     }
 }
