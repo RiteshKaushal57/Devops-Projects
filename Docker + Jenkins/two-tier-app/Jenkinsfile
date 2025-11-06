@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:18'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     environment {
         BACKEND_DIR = 'Docker + Jenkins/two-tier-app/backend'
@@ -23,6 +18,8 @@ pipeline {
             steps {
                 echo '📦 Installing backend dependencies...'
                 dir("${BACKEND_DIR}") {
+                    // Fix npm cache permissions
+                    sh 'npm config set cache $WORKSPACE/.npm --global'
                     sh 'npm install'
                 }
             }
@@ -40,7 +37,13 @@ pipeline {
         stage('Run Container') {
             steps {
                 echo '🚀 Running backend container...'
-                sh 'docker run -d -p 3000:3000 --name backend ${DOCKER_IMAGE} || echo "Container already running."'
+                sh '''
+                    if [ "$(docker ps -q -f name=backend)" ]; then
+                        echo "Container already running. Restarting..."
+                        docker rm -f backend
+                    fi
+                    docker run -d -p 3000:3000 --name backend ${DOCKER_IMAGE}
+                '''
             }
         }
     }
