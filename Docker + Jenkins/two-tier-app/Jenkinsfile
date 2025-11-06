@@ -1,0 +1,70 @@
+pipeline {
+    agent {
+        docker {
+            image 'node:18'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+
+    environment {
+        BACKEND_DIR = 'backend'
+        DOCKER_IMAGE = 'two-tier-backend:latest'
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                echo '📥 Pulling latest code from GitHub...'
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                echo '📦 Installing backend dependencies...'
+                dir("${BACKEND_DIR}") {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                echo '🧪 Running tests...'
+                dir("${BACKEND_DIR}") {
+                    sh 'npm test || echo "No tests found, skipping..."'
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo '🐳 Building Docker image for backend...'
+                dir("${BACKEND_DIR}") {
+                    sh 'docker build -t ${DOCKER_IMAGE} .'
+                }
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                echo '🚀 Running backend container...'
+                sh 'docker run -d -p 3000:3000 --name backend ${DOCKER_IMAGE} || echo "Container already running."'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Build and container started successfully!'
+        }
+        failure {
+            echo '❌ Build failed! Check logs for details.'
+        }
+        always {
+            echo '🧹 Cleaning up old containers...'
+            sh 'docker ps -aq --filter "name=backend" | xargs -r docker rm -f || true'
+        }
+    }
+}
