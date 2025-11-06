@@ -58,10 +58,6 @@ pipeline {
     post {
         always {
             echo '🧹 Cleanup temporary containers/images if needed...'
-            sh """
-            docker ps -aq --filter name=frontend | xargs -r docker rm -f || true
-            docker ps -aq --filter name=backend  | xargs -r docker rm -f || true
-            """
         }
     }
 }
