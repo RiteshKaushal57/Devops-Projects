@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:18'      // use node image with npm preinstalled
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
 
     stages {
         stage('Checkout Code') {
@@ -18,7 +23,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                echo 'Running test cases...'
+                echo 'Running tests...'
                 sh 'npm test || echo "No tests found, skipping..."'
             }
         }
@@ -26,14 +31,14 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                sh 'docker build -t node-backend:latest .'
+                sh 'docker build -t two-tier-backend .'
             }
         }
 
         stage('Run Container') {
             steps {
-                echo 'Running Docker container...'
-                sh 'docker run -d -p 3000:3000 --name node-backend node-backend:latest || echo "Container already running"'
+                echo 'Running container...'
+                sh 'docker run -d -p 3000:3000 --name backend two-tier-backend'
             }
         }
     }
