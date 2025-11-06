@@ -91,16 +91,16 @@ docker run -d \
 
 **What it does:**
 
-**- -d →** Runs in detached mode (in background)
+- **-d →** Runs in detached mode (in background)
 
-**- --name jenkins →** Names the container jenkins
+- **--name jenkins →** Names the container jenkins
 
-**- -p 8080:8080 →** Jenkins web UI accessible via your EC2 Public IP on port 8080
+- **- -p 8080:8080 →** Jenkins web UI accessible via your EC2 Public IP on port 8080
 (Example: http://<your-ec2-ip>:8080)
 
-**- -p 50000:50000 →** Used for Jenkins agents (for later use)
+- **-p 50000:50000 →** Used for Jenkins agents (for later use)
 
-**- -v jenkins_home:/var/jenkins_home →** Persists data even if the container restarts
+- **-v jenkins_home:/var/jenkins_home →** Persists data even if the container restarts
 
 **Step 4.3 — Get Jenkins initial password**
 ```
