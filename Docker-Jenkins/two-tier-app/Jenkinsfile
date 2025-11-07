@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        FRONTEND_DIR = 'Docker-Jenkins/two-tier-app/frontend'
-        BACKEND_DIR  = 'Docker-Jenkins/two-tier-app/backend'
+        FRONTEND_DIR   = 'Docker-Jenkins/two-tier-app/frontend'
+        BACKEND_DIR    = 'Docker-Jenkins/two-tier-app/backend'
         FRONTEND_IMAGE = 'two-tier-frontend:latest'
         BACKEND_IMAGE  = 'two-tier-backend:latest'
     }
@@ -16,46 +16,48 @@ pipeline {
             }
         }
 
-        stage('Build Frontend') {
+        stage('Frontend') {
             steps {
                 echo '💻 Building frontend...'
                 dir("${FRONTEND_DIR}") {
                     sh """
-                        docker run --rm -v "\$PWD":/app -w /app node:18 bash -c "npm install && npm run build"
-                        docker build -t ${FRONTEND_IMAGE} .
+                    docker build -t ${FRONTEND_IMAGE} . || true
+                    if [ \$(docker images -q ${FRONTEND_IMAGE}) ]; then
+                        echo '🚀 Starting frontend container...'
+                        
+                        docker ps -q --filter name=frontend | grep -q . && docker stop frontend && docker rm frontend || true
+                        docker run -d -p 8081:80 --name frontend two-tier-frontend:latest
+
+                    else
+                        echo '⚠️ No changes in frontend image, skipping container restart.'
+                    fi
                     """
                 }
             }
         }
 
-        stage('Build Backend') {
+        stage('Backend') {
             steps {
                 echo '📦 Building backend...'
                 dir("${BACKEND_DIR}") {
                     sh """
-                        docker run --rm -v "\$PWD":/app -w /app node:18 bash -c "npm install"
-                        docker build -t ${BACKEND_IMAGE} .
+                    docker build -t ${BACKEND_IMAGE} . || true
+                    if [ \$(docker images -q ${BACKEND_IMAGE}) ]; then
+                        echo '🚀 Starting backend container...'
+                        docker ps -q --filter name=backend | grep -q . && docker stop backend && docker rm backend || true
+                        docker run -d -p 3000:3000 --name backend ${BACKEND_IMAGE}
+                    else
+                        echo '⚠️ No changes in backend image, skipping container restart.'
+                    fi
                     """
                 }
-            }
-        }
-
-        stage('Run Containers') {
-            steps {
-                echo '🚀 Running backend container...'
-                sh 'docker run -d -p 3000:3000 --name backend ${BACKEND_IMAGE} || echo "Backend container already running."'
-
-                echo '🚀 Running frontend container...'
-                sh 'docker run -d -p 8080:80 --name frontend ${FRONTEND_IMAGE} || echo "Frontend container already running."'
             }
         }
     }
 
     post {
         always {
-            echo '🧹 Cleaning up old containers...'
-            sh 'docker ps -aq --filter "name=frontend" | xargs -r docker rm -f || true'
-            sh 'docker ps -aq --filter "name=backend" | xargs -r docker rm -f || true'
+            echo '🧹 Cleanup temporary containers/images if needed...'
         }
     }
 }
