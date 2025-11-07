@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple 3-Tier App</title>
+  <style>
+    body { font-family: Arial; text-align: center; margin-top: 50px; }
+    button { padding: 10px 20px; font-size: 16px; }
+    ul { list-style: none; padding: 0; }
+  </style>
+</head>
+<body>
+  <h1>Welcome to 3-Tier App</h1>
+  <button onclick="loadUsers()">Load Users</button>
+  <ul id="userList"></ul>
+
+  <script>
+    async function loadUsers() {
+      const res = await fetch("http://backend-service:5000/users");
+      const data = await res.json();
+      const list = document.getElementById("userList");
+      list.innerHTML = "";
+      data.forEach(u => {
+        const li = document.createElement("li");
+        li.textContent = `${u._id}: ${u.name}`;
+        list.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>
