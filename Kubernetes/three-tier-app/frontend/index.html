@@ -16,9 +16,7 @@
 
 <script>
 document.getElementById("loadBtn").addEventListener("click", () => {
-  fetch(`http://localhost:5000/api/users?ts=${Date.now()}`)
-
-
+  fetch(`http://backend:5000/api/users?ts=${Date.now()}`)
     .then(res => res.json())
     .then(users => {
       const list = document.getElementById("userList");
