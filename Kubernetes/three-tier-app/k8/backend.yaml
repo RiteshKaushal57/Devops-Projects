@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: 467680962369.dkr.ecr.us-east-1.amazonaws.com/three-tier-backend
+        image: 467680962369.dkr.ecr.us-east-1.amazonaws.com/three-tier-backend:latest
         ports:
         - containerPort: 5000
         env:
