@@ -1,6 +1,4 @@
-// This script will run once inside MongoDB container to seed data
-db = db.getSiblingDB("userdb");
-
+db = db.getSiblingDB("usersdb"); // ✅ match backend
 db.users.insertMany([
   { name: "Ritesh" },
   { name: "Alex" },

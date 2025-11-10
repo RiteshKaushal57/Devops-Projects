@@ -11,21 +11,26 @@
 </head>
 <body>
   <h1>Welcome to 3-Tier App</h1>
-  <button onclick="loadUsers()">Load Users</button>
+  <button id="loadBtn">Load Users</button>
   <ul id="userList"></ul>
 
-  <script>
-    async function loadUsers() {
-      const res = await fetch("http://backend-service:5000/users");
-      const data = await res.json();
+<script>
+document.getElementById("loadBtn").addEventListener("click", () => {
+  fetch(`http://localhost:5000/api/users?ts=${Date.now()}`)
+
+
+    .then(res => res.json())
+    .then(users => {
       const list = document.getElementById("userList");
       list.innerHTML = "";
-      data.forEach(u => {
+      users.forEach(u => {
         const li = document.createElement("li");
-        li.textContent = `${u._id}: ${u.name}`;
+        li.textContent = u.name;
         list.appendChild(li);
       });
-    }
-  </script>
+    })
+    .catch(err => console.error("Error:", err));
+});
+</script>
 </body>
 </html>

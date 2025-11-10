@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: three-tier-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: 467680962369.dkr.ecr.us-east-1.amazonaws.com/three-tier-backend
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MONGO_URL
+          value: mongodb://mongo:27017/userdb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: three-tier-app
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 5000
+      targetPort: 5000
+  type: ClusterIP
