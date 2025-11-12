@@ -17,3 +17,8 @@ Terraform knows where and how to deploy the infrastructure.
 
 ## Step 6: Define a provider
 Terraform knows where and how to deploy the infrastructure.
+
+**Commands used in project:**  
+- terraform validate
+- terraform plan
+- terraform apply
