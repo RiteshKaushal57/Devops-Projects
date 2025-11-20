@@ -40,4 +40,4 @@ EOF
 
 # Start Apache and enable it on boot
 systemctl start apache2
-systemctl enable apache2
+systemctl enable apache2 
