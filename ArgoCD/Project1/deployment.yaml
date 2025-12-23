@@ -5,7 +5,7 @@ metadata:
   labels:
     app: chai-app
 spec:
-  replicas: 3
+  replicas: 0
   selector:
     matchLabels:
       app: chai-app
