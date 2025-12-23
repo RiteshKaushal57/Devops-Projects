@@ -5,11 +5,7 @@ metadata:
   labels:
     app: chai-app
 spec:
-<<<<<<< HEAD
-  replicas: 4
-=======
   replicas: 3
->>>>>>> 57a006d0f2bde083e043e08546afc58c7f93d75d
   selector:
     matchLabels:
       app: chai-app
