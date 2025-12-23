@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chai-app
+  labels:
+    app: chai-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: chai-app
+  template:
+    metadata:
+      labels:
+        app: chai-app
+    spec:
+      containers:
+      - name: chai-app
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
