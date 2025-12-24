@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: image-updater-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: image-updater-demo
+  template:
+    metadata:
+      labels:
+        app: image-updater-demo
+    spec:
+      containers:
+      - name: app
+        image: ritesh57/image-updater-demo:v1
+        ports:
+        - containerPort: 80
