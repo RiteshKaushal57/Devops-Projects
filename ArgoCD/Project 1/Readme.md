@@ -62,7 +62,8 @@ https://localhost:8080
 kubectl get secret argocd-initial-admin-secret -n argocd \
   -o jsonpath="{.data.password}" | base64 -d && echo
 ```
-
+GakI11yWKS23Rfpn
+kubectl port-forward svc/argocd-server -n argocd 8080:443 --address=0.0.0.0 &
 Great, theory + hands-on is exactly how Argo CD really clicks. Below are **practical Argo CD projects**, ordered from **beginner → advanced**, each with **what you’ll learn** and **clear deliverables** so you know when you’ve actually “done” it.
 
 ---

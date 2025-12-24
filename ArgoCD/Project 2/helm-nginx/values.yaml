@@ -1,0 +1,10 @@
+replicaCount: 2
+
+service:
+  type: ClusterIP
+  port: 80
+
+image:
+  registry: docker.io
+  repository: bitnami/nginx
+  tag: latest
