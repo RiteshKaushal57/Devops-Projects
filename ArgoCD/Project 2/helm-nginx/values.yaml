@@ -141,7 +141,7 @@ extraEnvVarsSecret: ""
 
 ## @param replicaCount Number of NGINX replicas to deploy
 ##
-replicaCount: 3
+replicaCount: 2
 ## @param revisionHistoryLimit The number of old history to retain to allow rollback
 ##
 revisionHistoryLimit: 10
