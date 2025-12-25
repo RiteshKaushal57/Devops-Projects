@@ -18,10 +18,3 @@ spec:
         image: nginx
         ports:
         - containerPort: 80
-command: ["/bin/sh"]
-args:
-  - -c
-  - |
-    echo "Starting DB...";
-    sleep 10;
-    nginx -g 'daemon off;'
