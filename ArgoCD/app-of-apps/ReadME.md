@@ -101,3 +101,6 @@ If you want, I can:
 * turn this into a **cheat sheet**
 * add a **diagram**
 * or combine it with your App-of-Apps notes into one GitOps page
+
+
+The database app was healthy because it had no resources to deploy, so Kubernetes never checked whether the namespace existed.
