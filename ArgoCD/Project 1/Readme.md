@@ -65,39 +65,8 @@ kubectl get secret argocd-initial-admin-secret -n argocd \
 ```
 GakI11yWKS23Rfpn
 
-Great, theory + hands-on is exactly how Argo CD really clicks. Below are **practical Argo CD projects**, ordered from **beginner → advanced**, each with **what you’ll learn** and **clear deliverables** so you know when you’ve actually “done” it.
-
----
 
 
-
-
-## 5️⃣ App-of-Apps Pattern (Production-Grade)
-
-**Project**
-
-* Manage **multiple applications** using a single parent app.
-
-**What you do**
-
-* Create a root Argo CD app that deploys:
-
-  * frontend
-  * backend
-  * database
-* Each app has its own folder and manifests.
-
-**You will learn**
-
-* Scalable GitOps design
-* How large teams manage dozens of services
-* Clean separation of concerns
-
-**Deliverable**
-
-* One Argo app controlling all others.
-
----
 
 ## 6️⃣ Sync Waves & Ordering (Intermediate)
 
@@ -208,30 +177,3 @@ Just tell me which project you want to start with.
 
 
 
-𝗦𝗰𝗮𝗹𝗶𝗻𝗴 𝗮𝗻𝗱 𝗿𝗼𝗹𝗹𝗯𝗮𝗰𝗸 𝗶𝗻 𝗞𝘂𝗯𝗲𝗿𝗻𝗲𝘁𝗲𝘀 — 𝘁𝗵𝗲 𝗚𝗶𝘁𝗢𝗽𝘀 𝘄𝗮𝘆 𝘄𝗶𝘁𝗵 𝗔𝗿𝗴𝗼 𝗖𝗗 𝗮𝗻𝗱 𝗛𝗲𝗹𝗺
-
-Today I built a project using Argo CD with Helm, where all changes are made through Git instead of making direct changes in the cluster.
-
-
-
-What I implemented in this project:
-
-🔹 Deployed an application using a Helm chart managed by Argo CD.
-
-🔹 Increased replicas from 2 → 3 by changing values.yaml in Git.
-
-🔹 Argo CD picked up the change and updated the cluster on its own.
-
-🔹 Rolled back safely to 2 replicas, again using Git.
-
-
-
-📹 The attached video shows:
-
-• Scaling replicas via Git
-
-• Rolling back to a stable state
-
-
-
-#DevOps #GitOps #ArgoCD #Kubernetes #Linux #Docker #Terraform #LearningInPublic #DevOpsEngineer #CloudComputing #AWS  #Ansible #Jenkins #CICD
