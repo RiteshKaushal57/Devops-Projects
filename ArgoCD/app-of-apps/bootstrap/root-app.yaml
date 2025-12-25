@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/RiteshKaushal57/Devops-Projects.git
     targetRevision: main
-    path: ArgoCD/app-of-apps
+    path: ArgoCD/app-of-apps/apps
 
   destination:
     server: https://kubernetes.default.svc
