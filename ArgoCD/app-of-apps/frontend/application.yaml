@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/RiteshKaushal57/Devops-Projects.git
     targetRevision: main
-    path: Project-4-app-of-apps/frontend
+    path: ArgoCD/app-of-apps/frontend
   destination:
     server: https://kubernetes.default.svc
     namespace: frontend
