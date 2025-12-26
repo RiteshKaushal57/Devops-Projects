@@ -68,61 +68,6 @@ GakI11yWKS23Rfpn
 
 
 
-## 6️⃣ Sync Waves & Ordering (Intermediate)
-
-**Project**
-
-* Deploy apps in a strict order.
-
-**What you do**
-
-* Database → Backend → Frontend
-* Use **sync waves** annotations.
-* Simulate failure and recovery.
-
-**You will learn**
-
-* Deployment orchestration
-* Dependency handling in GitOps
-* Real-world rollout behavior
-
-**Deliverable**
-
-* Controlled, ordered deployments.
-
----
-
-## 7️⃣ Argo CD RBAC & Multi-Team Setup (Advanced)
-
-**Project**
-
-* Simulate multiple teams using Argo CD.
-
-**What you do**
-
-* Create Argo CD Projects:
-
-  * team-A
-  * team-B
-* Restrict:
-
-  * namespaces
-  * Git repos
-  * cluster access
-* Create read-only vs admin roles.
-
-**You will learn**
-
-* Enterprise-level Argo CD security
-* Project isolation
-* RBAC best practices
-
-**Deliverable**
-
-* Teams cannot access each other’s apps.
-
----
-
 ## 8️⃣ CI + Argo CD End-to-End GitOps Pipeline (Job-Ready Project)
 
 **Project**
