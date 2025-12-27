@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: team-b-app
+  namespace: argocd
+spec:
+  project: team-b
+  source:
+    repoURL: https://github.com/RiteshKaushal57/Devops-Projects.git
+    targetRevision: main
+    path: ArgoCD/RBAC/services/team-b
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: team-b-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

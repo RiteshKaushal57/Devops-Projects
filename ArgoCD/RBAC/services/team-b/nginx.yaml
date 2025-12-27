@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: team-b-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: team-b-nginx
+  template:
+    metadata:
+      labels:
+        app: team-b-nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
