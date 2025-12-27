@@ -11,7 +11,7 @@ spec:
     path: ArgoCD/RBAC/services/team-a
   destination:
     server: https://kubernetes.default.svc
-    namespace: team-a-dev
+    namespace: team-b-dev
   syncPolicy:
     automated:
       prune: true
